@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Refactoring code</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="#" id="homePage">Home</a>
+        <a href="#" id="featuresPage">Features</a>
+        <a href="#" id="supportPage">Support</a>
+        <a href="#" id="contactPage">Contact</a>
+    </div>
+
+    <div class="container" id="homeContent">
+        <h2>Code Refactoring</h2>
+        <p>Enter your Python code below and let us simplify it for you.</p>
+        <textarea id="codeInput" placeholder="Enter your Python code here..."></textarea>
+        <button onclick="simplifyCode()">Simplify Code</button>
+        <h2>Simplified Code:</h2>
+        <pre id="output">Your simplified code will appear here...</pre>
+    </div>
+
+    <script>
+        async function simplifyCode() {
+            const code = document.getElementById("codeInput").value;
+            if (!code.trim()) {
+                document.getElementById("output").innerText = "Please enter some code to simplify.";
+                return;
+            }
+            
+            document.getElementById("output").innerText = "Processing...";
+            const response = await fetch("/simplify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+            const result = await response.json();
+            document.getElementById("output").innerText = result.simplified_code;
+        }
+
+        document.getElementById("homePage").addEventListener("click", function() {
+            togglePage("home");
+        });
+        document.getElementById("featuresPage").addEventListener("click", function() {
+            togglePage("features");
+        });
+        document.getElementById("supportPage").addEventListener("click", function() {
+            togglePage("support");
+        });
+        document.getElementById("contactPage").addEventListener("click", function() {
+            togglePage("contact");
+        });
+
+        function togglePage(page) {
+            document.getElementById("homeContent").style.display = page === "home" ? "block" : "none";
+            document.getElementById("featuresContent").style.display = page === "features" ? "block" : "none";
+            document.getElementById("supportContent").style.display = page === "support" ? "block" : "none";
+            document.getElementById("contactContent").style.display = page === "contact" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
